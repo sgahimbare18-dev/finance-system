@@ -11,6 +11,9 @@ export default function Budgets() {
     title: "",
     amount_planned: "",
   });
+  const [search, setSearch] = useState("");
+  const [filterDepartment, setFilterDepartment] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
 
   useEffect(() => {
     fetchBudgets();
@@ -54,17 +57,81 @@ export default function Budgets() {
     }
   };
 
+  const handleDownload = async (id) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:4000/api/budgets/${id}/download`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `budget-${id}.txt`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      setError("Failed to download budget.");
+    }
+  };
+
+  const handleDownloadAll = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:4000/api/budgets/download`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'all-budgets.txt');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      setError("Failed to download all budgets.");
+    }
+  };
+
+  const filteredBudgets = budgets.filter(b =>
+    b.title.toLowerCase().includes(search.toLowerCase()) &&
+    (filterDepartment === "" || b.department === filterDepartment) &&
+    (filterStatus === "" || b.status === filterStatus)
+  );
+
+  const exportToCSV = () => {
+    const csv = "Department,Title,Amount Planned,Status\n" + filteredBudgets.map(b => `${b.department},${b.title},${b.amount_planned},${b.status}`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "budgets.csv";
+    a.click();
+  };
+
   if (loading) return <div className="loading">Loading budgets... 📋</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="page">
       <h2>📋 Budgets</h2>
+      <div className="filters">
+        <input type="text" placeholder="Search by title" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <select value={filterDepartment} onChange={(e) => setFilterDepartment(e.target.value)}>
+          <option value="">All Departments</option>
+          {[...new Set(budgets.map(b => b.department))].map(dep => <option key={dep} value={dep}>{dep}</option>)}
+        </select>
+        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+          <option value="">All Statuses</option>
+          {[...new Set(budgets.map(b => b.status))].map(stat => <option key={stat} value={stat}>{stat}</option>)}
+        </select>
+        <button className="btn-secondary" onClick={exportToCSV}>📥 Export CSV</button>
+      </div>
       <button className="btn-primary" onClick={() => setShowForm(true)}>Add Budget</button>
+      <button className="btn-secondary" onClick={handleDownloadAll} style={{ marginLeft: '10px' }}>Download All Budgets</button>
       <ul className="list">
-        {budgets.map((b) => (
+        {filteredBudgets.map((b) => (
           <li key={b.id} className="list-item">
             {b.department} — {b.title} — ${b.amount_planned} ({b.status})
+            <button className="btn-secondary" onClick={() => handleDownload(b.id)} style={{ marginRight: '5px' }}>Download</button>
             <button className="btn-delete" onClick={() => handleDelete(b.id)}>Delete</button>
           </li>
         ))}

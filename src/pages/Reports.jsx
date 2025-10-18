@@ -1,5 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Bar, Pie, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  PointElement,
+  LineElement,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  PointElement,
+  LineElement
+);
 
 export default function Reports() {
   const [data, setData] = useState({
@@ -68,29 +93,54 @@ export default function Reports() {
           <p>${(totalIncome - totalExpenses).toFixed(2)}</p>
         </div>
       </div>
-      <div className="chart">
-        <h3>Expense Categories (Pie Chart)</h3>
-        <div className="pie-chart" style={{
-          background: `conic-gradient(${categoryEntries.map(([category, amount], index) => {
-            const percentage = (amount / totalExpenses) * 100;
-            const start = categoryEntries.slice(0, index).reduce((sum, [, amt]) => sum + (amt / totalExpenses) * 360, 0);
-            const end = start + (percentage / 100) * 360;
-            return `hsl(${index * 60}, 70%, 50%) ${start}deg ${end}deg`;
-          }).join(', ')})`
-        }}>
+      <div className="charts">
+        <div className="chart">
+          <h3>Expense Categories</h3>
+          <Pie
+            data={{
+              labels: categoryEntries.map(([category]) => category),
+              datasets: [
+                {
+                  data: categoryEntries.map(([, amount]) => amount),
+                  backgroundColor: ["#ff6384", "#36a2eb", "#cc65fe", "#ffce56", "#ff9f40"],
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { position: "right" },
+                title: { display: true, text: "Expenses by Category" },
+              },
+            }}
+          />
         </div>
-        <div className="pie-legend">
-          {categoryEntries.map(([category, amount], index) => {
-            const percentage = (amount / totalExpenses) * 100;
-            return (
-              <div key={category} className="legend-item">
-                <span className="legend-color" style={{ background: `hsl(${index * 60}, 70%, 50%)` }}></span>
-                <span>{category}: ${amount.toFixed(2)} ({percentage.toFixed(1)}%)</span>
-              </div>
-            );
-          })}
+        <div className="chart">
+          <h3>Financial Overview</h3>
+          <Bar
+            data={{
+              labels: ["Budgets", "Expenses", "Income", "Net Balance"],
+              datasets: [
+                {
+                  label: "Amount ($)",
+                  data: [totalBudgets, totalExpenses, totalIncome, totalIncome - totalExpenses],
+                  backgroundColor: ["#3498db", "#e74c3c", "#2ecc71", "#f39c12"],
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { position: "top" },
+                title: { display: true, text: "Total Amounts" },
+              },
+            }}
+          />
         </div>
       </div>
+
+      <div className="spacer" style={{ margin: '40px 0' }}></div>
+
       <div className="chart">
         <h3>Budget vs. Actual Expenses</h3>
         {data.budgets.map(b => {
