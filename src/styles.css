@@ -641,16 +641,79 @@ button[type="submit"]:disabled {
   background-color: #c82333;
 }
 
+/* Hamburger Menu */
+.hamburger-menu {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  z-index: 1001;
+  transition: all 0.3s ease;
+}
+
+.hamburger-menu:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+}
+
+/* Close Sidebar Button */
+.close-sidebar {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  color: #374151;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1001;
+  transition: color 0.3s ease;
+}
+
+body.dark .close-sidebar {
+  color: #f9fafb;
+}
+
+.close-sidebar:hover {
+  color: #4f46e5;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  .hamburger-menu {
+    display: block;
+  }
+
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: static;
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  .sidebar.sidebar-open {
+    left: 0;
+  }
+
+  .close-sidebar {
+    display: block;
   }
 
   .main-content {
     margin-left: 0;
+    padding: 80px 20px 20px 20px;
   }
 
   .summary-cards {
@@ -660,5 +723,105 @@ button[type="submit"]:disabled {
   .modal-content {
     width: 95%;
     padding: 20px;
+  }
+
+  .charts {
+    flex-direction: column;
+  }
+
+  .chart {
+    flex: 1 1 auto;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters input, .filters select, .filters button {
+    margin-bottom: 10px;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(7, 1fr);
+    font-size: 0.7rem;
+  }
+
+  .list-item {
+    padding: 15px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 80px 10px 10px 10px;
+  }
+
+  .page {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .sidebar-title {
+    font-size: 1.2rem;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .modal-content {
+    width: 98%;
+    padding: 15px;
+  }
+
+  .btn-primary {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .summary-cards {
+    gap: 15px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .chart {
+    padding: 15px;
+    min-height: 250px;
+  }
+
+  .pie-chart {
+    width: 250px;
+    height: 250px;
+  }
+
+  .calendar {
+    padding: 15px;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(7, 1fr);
+    font-size: 0.6rem;
+  }
+
+  .list-item {
+    padding: 10px;
+  }
+
+  form {
+    gap: 10px;
+  }
+
+  input, select, textarea {
+    padding: 10px;
+    font-size: 0.9rem;
   }
 }

@@ -17,7 +17,7 @@ export default function Login({ onLogin }) {
 
     try {
       const endpoint = isSignUp ? "/api/auth/signup" : "/api/auth/signin";
-      const response = await axios.post(`http://localhost:4000${endpoint}`, {
+      const response = await axios.post(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}${endpoint}`, {
         email,
         password,
       });
