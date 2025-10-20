@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 import { Bar, Pie, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -44,11 +45,11 @@ export default function Dashboard() {
   const fetchAllData = async () => {
     try {
       const [budgetsRes, expensesRes, incomeRes, payrollRes, goalsRes] = await Promise.all([
-        axios.get("http://127.0.0.1:4000/api/budgets"),
-        axios.get("http://127.0.0.1:4000/api/expenses"),
-        axios.get("http://127.0.0.1:4000/api/income"),
-        axios.get("http://127.0.0.1:4000/api/payroll"),
-        axios.get("http://127.0.0.1:4000/api/goals"),
+        axios.get(`${API_BASE}/api/budgets`),
+        axios.get(`${API_BASE}/api/expenses`),
+        axios.get(`${API_BASE}/api/income`),
+        axios.get(`${API_BASE}/api/payroll`),
+        axios.get(`${API_BASE}/api/goals`),
       ]);
       setData({
         budgets: budgetsRes.data,

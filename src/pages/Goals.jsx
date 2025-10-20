@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function Goals() {
   const [goals, setGoals] = useState([]);
@@ -14,7 +15,7 @@ export default function Goals() {
 
   const fetchGoals = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:4000/api/goals");
+      const res = await axios.get(`${API_BASE}/api/goals`);
       setGoals(res.data);
     } catch (err) {
       setError("Failed to fetch goals.");
@@ -26,7 +27,7 @@ export default function Goals() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:4000/api/goals", formData);
+      await axios.post(`${API_BASE}/api/goals`, formData);
       setFormData({ name: "", target_amount: "", current_amount: "", deadline: "" });
       setShowForm(false);
       fetchGoals();
@@ -37,7 +38,7 @@ export default function Goals() {
 
   const handleUpdate = async (id, newAmount) => {
     try {
-      await axios.put(`http://127.0.0.1:4000/api/goals/${id}`, { current_amount: newAmount });
+      await axios.put(`${API_BASE}/api/goals/${id}`, { current_amount: newAmount });
       fetchGoals();
     } catch (err) {
       setError("Failed to update goal.");
@@ -47,7 +48,7 @@ export default function Goals() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this goal?")) {
       try {
-        await axios.delete(`http://127.0.0.1:4000/api/goals/${id}`);
+        await axios.delete(`${API_BASE}/api/goals/${id}`);
         fetchGoals();
       } catch (err) {
         setError("Failed to delete goal.");

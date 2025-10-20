@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function Income() {
   const [income, setIncome] = useState([]);
@@ -26,7 +27,7 @@ export default function Income() {
 
   const fetchIncome = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:4000/api/income");
+      const res = await axios.get(`${API_BASE}/api/income`);
       setIncome(res.data);
     } catch (err) {
       setError("Failed to fetch income data.");
@@ -38,7 +39,7 @@ export default function Income() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:4000/api/income", formData);
+      await axios.post(`${API_BASE}/api/income`, formData);
       setFormData({ source_name: "", category: "", amount: "", date_received: "", notes: "", recurrence: "None", recurrence_end: "" });
       setShowForm(false);
       fetchIncome();
@@ -54,7 +55,7 @@ export default function Income() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this income entry?")) {
       try {
-        await axios.delete(`http://127.0.0.1:4000/api/income/${id}`);
+        await axios.delete(`${API_BASE}/api/income/${id}`);
         fetchIncome();
       } catch (err) {
         setError("Failed to delete income.");

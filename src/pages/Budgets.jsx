@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function Budgets() {
   const [budgets, setBudgets] = useState([]);
@@ -21,7 +22,7 @@ export default function Budgets() {
 
   const fetchBudgets = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:4000/api/budgets");
+      const res = await axios.get(`${API_BASE}/api/budgets`);
       setBudgets(res.data);
     } catch (err) {
       setError("Failed to fetch budgets.");
@@ -33,7 +34,7 @@ export default function Budgets() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:4000/api/budgets", formData);
+      await axios.post(`${API_BASE}/api/budgets`, formData);
       setFormData({ department: "", title: "", amount_planned: "" });
       setShowForm(false);
       fetchBudgets();
@@ -49,7 +50,7 @@ export default function Budgets() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this budget?")) {
       try {
-        await axios.delete(`http://127.0.0.1:4000/api/budgets/${id}`);
+        await axios.delete(`${API_BASE}/api/budgets/${id}`);
         fetchBudgets();
       } catch (err) {
         setError("Failed to delete budget.");
@@ -59,7 +60,7 @@ export default function Budgets() {
 
   const handleDownload = async (id) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:4000/api/budgets/${id}/download`, {
+      const response = await axios.get(`${API_BASE}/api/budgets/${id}/download`, {
         responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -76,7 +77,7 @@ export default function Budgets() {
 
   const handleDownloadAll = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:4000/api/budgets/download`, {
+      const response = await axios.get(`${API_BASE}/api/budgets/download`, {
         responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));

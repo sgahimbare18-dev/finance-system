@@ -41,7 +41,7 @@ export default function Communications() {
 
   const fetchCommunications = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/communications");
+      const response = await axios.get(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications`);
       setCommunications(response.data.data || []);
     } catch (error) {
       console.error("Error fetching communications:", error);
@@ -50,7 +50,7 @@ export default function Communications() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/communications/users");
+      const response = await axios.get(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications/users`);
       setUsers(response.data.data || []);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -61,7 +61,7 @@ export default function Communications() {
 
   const fetchChannels = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/communications/channels");
+      const response = await axios.get(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications/channels`);
       setChannels(response.data.data || []);
     } catch (error) {
       console.error("Error fetching channels:", error);
@@ -70,7 +70,7 @@ export default function Communications() {
 
   const fetchChannelMessages = async (channelId) => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/communications/channels/${channelId}/messages`);
+      const response = await axios.get(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications/channels/${channelId}/messages`);
       setChannelMessages(response.data.data || []);
     } catch (error) {
       console.error("Error fetching channel messages:", error);
@@ -80,7 +80,7 @@ export default function Communications() {
   const handleSendInvitation = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/api/invite", inviteForm);
+      await axios.post(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/invite`, inviteForm);
       alert("Invitation sent successfully!");
       setShowInviteModal(false);
       setInviteForm({ email: "", role: "Finance Officer" });
@@ -94,7 +94,7 @@ export default function Communications() {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/api/communications/message", messageForm);
+      await axios.post(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications/message`, messageForm);
       alert("Message sent successfully!");
       setShowMessageModal(false);
       setMessageForm({ recipient: "", subject: "", message: "" });
@@ -108,7 +108,7 @@ export default function Communications() {
   const handleCreateChannel = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/api/communications/channels", channelForm);
+      await axios.post(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications/channels`, channelForm);
       alert("Channel created successfully!");
       setShowChannelModal(false);
       setChannelForm({ name: "", description: "", is_private: false });
@@ -124,7 +124,7 @@ export default function Communications() {
     if (!newMessage.trim() || !selectedChannel) return;
 
     try {
-      await axios.post(`http://localhost:4000/api/communications/channels/${selectedChannel.id}/messages`, {
+      await axios.post(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications/channels/${selectedChannel.id}/messages`, {
         message: newMessage
       });
       setNewMessage("");
@@ -138,7 +138,7 @@ export default function Communications() {
   const handleJoinChannel = async (channelId) => {
     try {
       setActionLoading(true);
-      await axios.post(`http://localhost:4000/api/communications/channels/${channelId}/join`);
+      await axios.post(`${window.location.origin.includes('localhost') ? 'http://localhost:4000' : 'https://finance-system-1.onrender.com'}/api/communications/channels/${channelId}/join`);
       alert("Successfully joined channel!");
       await fetchChannels();
       // Set the joined channel as selected to keep user in the channel
