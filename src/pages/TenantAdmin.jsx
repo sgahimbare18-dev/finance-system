@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function TenantAdmin() {
   const [tenants, setTenants] = useState([]);
@@ -23,7 +24,7 @@ export default function TenantAdmin() {
 
   const fetchTenants = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:4000/api/tenants");
+      const response = await axios.get(`${API_BASE}/api/tenants`);
       setTenants(response.data);
     } catch (err) {
       setError("Failed to fetch tenants");
@@ -36,9 +37,9 @@ export default function TenantAdmin() {
     e.preventDefault();
     try {
       if (formData.id) {
-        await axios.put(`http://127.0.0.1:4000/api/tenants/${formData.id}`, formData);
+        await axios.put(`${API_BASE}/api/tenants/${formData.id}`, formData);
       } else {
-        await axios.post("http://127.0.0.1:4000/api/tenants", formData);
+        await axios.post(`${API_BASE}/api/tenants`, formData);
       }
       setShowForm(false);
       setFormData({
@@ -65,7 +66,7 @@ export default function TenantAdmin() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this tenant?")) {
       try {
-        await axios.delete(`http://127.0.0.1:4000/api/tenants/${id}`);
+        await axios.delete(`${API_BASE}/api/tenants/${id}`);
         fetchTenants();
       } catch (err) {
         setError("Failed to delete tenant");

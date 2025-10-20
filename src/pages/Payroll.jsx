@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function Payroll() {
   const [payroll, setPayroll] = useState([]);
@@ -20,7 +21,7 @@ export default function Payroll() {
 
   const fetchPayroll = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:4000/api/payroll");
+      const res = await axios.get(`${API_BASE}/api/payroll`);
       setPayroll(res.data);
     } catch (err) {
       setError("Failed to fetch payroll data.");
@@ -32,7 +33,7 @@ export default function Payroll() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:4000/api/payroll", formData);
+      await axios.post(`${API_BASE}/api/payroll`, formData);
       setFormData({ employee_id: "", month: "", amount_paid: "", status: "Pending", payment_date: "" });
       setShowForm(false);
       fetchPayroll();
@@ -48,7 +49,7 @@ export default function Payroll() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this payroll entry?")) {
       try {
-        await axios.delete(`http://127.0.0.1:4000/api/payroll/${id}`);
+        await axios.delete(`${API_BASE}/api/payroll/${id}`);
         fetchPayroll();
       } catch (err) {
         setError("Failed to delete payroll.");
