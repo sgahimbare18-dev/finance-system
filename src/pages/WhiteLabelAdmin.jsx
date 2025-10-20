@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function WhiteLabelAdmin() {
   const [settings, setSettings] = useState({
@@ -25,7 +26,7 @@ export default function WhiteLabelAdmin() {
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:4000/api/whitelabel");
+      const response = await axios.get(`${API_BASE}/api/whitelabel`);
       setSettings(response.data);
     } catch (err) {
       setError("Failed to fetch white-label settings");
@@ -37,7 +38,7 @@ export default function WhiteLabelAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put("http://127.0.0.1:4000/api/whitelabel", settings);
+      await axios.put(`${API_BASE}/api/whitelabel`, settings);
       alert("White-label settings updated successfully!");
     } catch (err) {
       setError("Failed to update settings");
@@ -51,7 +52,7 @@ export default function WhiteLabelAdmin() {
       formData.append('logo', file);
 
       try {
-        const response = await axios.post("http://127.0.0.1:4000/api/whitelabel/logo", formData, {
+        const response = await axios.post(`${API_BASE}/api/whitelabel/logo`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         setSettings(prev => ({ ...prev, logo: response.data.logoUrl }));

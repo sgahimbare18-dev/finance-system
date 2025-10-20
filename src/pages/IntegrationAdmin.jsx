@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function IntegrationAdmin() {
   const [integrations, setIntegrations] = useState([]);
@@ -26,7 +27,7 @@ export default function IntegrationAdmin() {
 
   const fetchIntegrations = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:4000/api/integrations");
+      const response = await axios.get(`${API_BASE}/api/integrations`);
       setIntegrations(response.data);
     } catch (err) {
       setError("Failed to fetch integrations");
@@ -39,9 +40,9 @@ export default function IntegrationAdmin() {
     e.preventDefault();
     try {
       if (formData.id) {
-        await axios.put(`http://127.0.0.1:4000/api/integrations/${formData.id}`, formData);
+        await axios.put(`${API_BASE}/api/integrations/${formData.id}`, formData);
       } else {
-        await axios.post("http://127.0.0.1:4000/api/integrations", formData);
+        await axios.post(`${API_BASE}/api/integrations`, formData);
       }
       setShowForm(false);
       setFormData({ name: "", type: "google_sheets", config: {} });
@@ -53,7 +54,7 @@ export default function IntegrationAdmin() {
 
   const handleSync = async (id) => {
     try {
-      const response = await axios.post(`http://127.0.0.1:4000/api/integrations/${id}/sync`);
+      const response = await axios.post(`${API_BASE}/api/integrations/${id}/sync`);
       alert(`Sync completed! ${response.data.syncedRecords} records synced.`);
       fetchIntegrations();
     } catch (err) {
@@ -64,7 +65,7 @@ export default function IntegrationAdmin() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this integration?")) {
       try {
-        await axios.delete(`http://127.0.0.1:4000/api/integrations/${id}`);
+        await axios.delete(`${API_BASE}/api/integrations/${id}`);
         fetchIntegrations();
       } catch (err) {
         setError("Failed to delete integration");

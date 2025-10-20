@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE from "../config/api.js";
 
 export default function RBACAdmin() {
   const [roles, setRoles] = useState([]);
@@ -30,7 +31,7 @@ export default function RBACAdmin() {
 
   const fetchRoles = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:4000/api/rbac/roles");
+      const response = await axios.get(`${API_BASE}/api/rbac/roles`);
       setRoles(response.data);
     } catch (err) {
       setError("Failed to fetch roles");
@@ -55,9 +56,9 @@ export default function RBACAdmin() {
     e.preventDefault();
     try {
       if (formData.id) {
-        await axios.put(`http://127.0.0.1:4000/api/rbac/roles/${formData.id}`, formData);
+        await axios.put(`${API_BASE}/api/rbac/roles/${formData.id}`, formData);
       } else {
-        await axios.post("http://127.0.0.1:4000/api/rbac/roles", formData);
+        await axios.post(`${API_BASE}/api/rbac/roles`, formData);
       }
       setShowForm(false);
       setFormData({ name: "", description: "", permissions: [] });
@@ -78,7 +79,7 @@ export default function RBACAdmin() {
 
   const handleAssignRole = async (userId, roleId) => {
     try {
-      await axios.post("http://127.0.0.1:4000/api/rbac/assign", { userId, roleId });
+      await axios.post(`${API_BASE}/api/rbac/assign`, { userId, roleId });
       fetchUsers();
     } catch (err) {
       setError("Failed to assign role");
@@ -88,7 +89,7 @@ export default function RBACAdmin() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this role?")) {
       try {
-        await axios.delete(`http://127.0.0.1:4000/api/rbac/roles/${id}`);
+        await axios.delete(`${API_BASE}/api/rbac/roles/${id}`);
         fetchRoles();
       } catch (err) {
         setError("Failed to delete role");
